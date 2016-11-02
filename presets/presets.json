@@ -1,0 +1,38 @@
+{
+	"1.jpg": {
+		"currency": "RUB", 
+		"total_price": 990.00, 
+		"items": [
+			{
+				"name": "Шапка",
+				"unit": "pieces",
+				"count": 1, 
+				"price": 990.00
+			}
+		]
+	},
+	"2.jpg": {
+		"currency": "RUB", 
+		"total_price": 101.00,
+		"items": [
+			{
+				"name": "Жевательная резинка Dirol Морозная мята",
+				"unit": "grams",
+				"count": 13.6, 
+				"price": 38.00
+			}, 
+			{
+				"name": "Батончик Бабаевский с шоколадной начинкой",
+				"unit": "pieces",
+				"count": 1, 
+				"price": 39.00
+			},
+			{
+				"name": "Шоколад Бабаевский горький",
+				"unit": "pieces",
+				"count": 1, 
+				"price": 24.00
+			}
+		]
+	}
+}
