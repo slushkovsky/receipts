@@ -23,9 +23,6 @@ def crop(img, corners, img_size):
 
     warped = cv2.warpPerspective(img, transform, img_size)
 
-    cv2.imshow('', warped)
-    cv2.waitKey()
-
     return warped
 
 
@@ -34,6 +31,8 @@ def match(filepath, corners=None):
 
     img = cv2.imread(filepath)
 
+    cv2.imwrite('/home/slushkov/full.png', img)
+
     if corners is not None: 
         img = crop(img, corners, Size(max(corners, key=lambda p: p[0])[0], max(corners, key=lambda p: p[1])[1]))
 
@@ -41,6 +40,10 @@ def match(filepath, corners=None):
 
     with open(os.path.join(config.PRESETS_DIR, 'presets.json'), 'r') as f: 
         presets = json.load(f)
+
+    print(corners)
+
+    cv2.imwrite('/home/slushkov/test.png', img)
 
     match_results = []
 

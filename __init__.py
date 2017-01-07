@@ -14,6 +14,4 @@ def ok_resp(**data):
 
 	return jsonify(**data)
 
-from .routes import bp 
-
-app.register_blueprint(bp)
+from . import routes
