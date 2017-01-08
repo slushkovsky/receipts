@@ -6,7 +6,8 @@ from logbook import Logger, FileHandler
 from . import resp 
 from .. import config
 from .. import photo_matcher
-from .models import SMS, Expense, Sale, AnalyseResult, Store, Payment
+from .. import analyse
+from ..models import SMS, Expense, Sale, AnalyseResult, Store, Payment
 
 
 bp = Blueprint('recognize', __name__) 
@@ -27,58 +28,14 @@ def recognize():
 
         file.save(save_path)
 
-        return resp.ok(receipt_data={
-            'currency': 'GBP',
-            'total_price': 17.24,
-            'category': 'household',
-            'store_name': 'My store',
-            'datetime': '26-12-2016 12:31',
-            'goods': [
-                {
-                    'name': 'HALO GU10',
-                    'unit': 'items',
-                    'count': 1,
-                    'price': 4.0
-                },
-                {
-                    'name': 'HALO 42W',
-                    'unit': 'items',
-                    'count': 1,
-                    'price': 4.0
-                },
-                {
-                    'name': 'WHITE SPIRIT',
-                    'unit': 'items',
-                    'count': 1,
-                    'price': 2.21
-                },
-                {
-                    'name': 'PAINT BRUSH',
-                    'unit': 'items',
-                    'count': 1,
-                    'price': 2.05
-                },
-                {
-                    'name': 'PRIMER',
-                    'unit': 'items',
-                    'count': 1,
-                    'price': 4.98
-                }
-            ],
-            'photo_url': None
-        })
-
         if 'crop' in request.args: 
             crop = [[int(_) for _ in p_str.split('x')] for p_str in request.args['crop'].split(';')]
         else:
             crop = None
 
-        receipt_data = photo_matcher.match(save_path, crop)
+        receipt = analyse.receipt.analyse(save_path, crop)
 
-        if receipt_data is not None: 
-            return resp.ok(receipt_data=receipt_data)
-        else:
-            return ERROR_RECOGNIZE_UNCERTAINTY
+        return resp.ok(result=receipt.to_dict())
     else: 
         return ERROR_MISSED_IMAGE
 
@@ -89,26 +46,10 @@ def recognize_sms():
 
     log.info('SMS ({sender}): {content}'.format(**sms.__dict__))
 
-    result = AnalyseResult(
-        expenses=[
-            Expense(
-                name='Test expense',
-                store=Store(name='restore', address=None),
-                date_time='31-12-2016 12:30',
-                payment=Payment(amount=30000.0, currency='RUB', type='cash'),
-                category='Electronics'
-            )
-        ],
-        sales=[
-            Sale(
-                name='Test sale',
-                description='',
-                store=Store(name='Ashan', address=None),
-                region='Moscow',
-                end='31-12-2017 13:40',
-                link=None
-            )
-        ] 
-    )
+    return resp.ok(result=analyse.sms.analyse(sms).to_dict())
 
-    return resp.ok(result=result.to_dict())
+@bp.route('/recognize/gmail', methods=['POST']) 
+def recognize_gmail():
+    auth_code = request.get_json(force=True, silent=True)['auth_code']
+
+    return resp.ok(result=analyse.gmail.analyse(auth_code).to_dict())

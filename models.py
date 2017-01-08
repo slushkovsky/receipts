@@ -159,4 +159,53 @@ class AnalyseResult(object):
             'sales':    [sale   .to_dict() for sale    in self.sales   ]
         }
 
+class Good(object):
+    def __init__(self, name, unit, count, price):
+        assert isinstance(name, str)
+        assert unit in ('items', 'gramms', 'milliliters')
+        assert isinstance(count, int)
+        assert isinstance(price, float) 
+
+        self.name = name
+        self.unit = unit
+        self.count = count
+        self.price = price
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'unit': self.unit,
+            'count': self.count,
+            'price': self.price
+        }
         
+class Receipt(object): 
+    def __init__(self, currency, date_time, store, category, goods, total_price):
+        if isinstance(date_time, str):
+            date_time = datetime.datetime.strptime(date_time, DATETIME_FORMAT)
+
+        assert isinstance(currency, str) 
+        assert isinstance(date_time, datetime.datetime)
+        assert isinstance(goods, Iterable) and not isinstance(goods, str)
+        assert isinstance(total_price, float) or total_price is None
+        assert isinstance(store, Store)
+        assert isinstance(category, str)
+
+        assert all([isinstance(_, Good) for _ in goods])
+
+        self.currency = currency
+        self.date_time = date_time
+        self.goods = list(goods)
+        self.total_price = total_price
+        self.store = store
+        self.category = category
+
+    def to_dict(self):
+        return {
+            'currency': self.currency,
+            'datetime': self.date_time.strftime(DATETIME_FORMAT),
+            'category': self.category,
+            'store': self.store.to_dict(),
+            'goods': [good.to_dict() for good in self.goods],
+            'total_price': self.total_price
+        }
