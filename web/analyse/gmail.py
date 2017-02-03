@@ -1,15 +1,12 @@
-import os
 import base64
 import email
+import os
 
-from apiclient import discovery
 import httplib2
-from oauth2client import client
-from oauth2client.client import flow_from_clientsecrets
 from apiclient.discovery import build
+from oauth2client.client import flow_from_clientsecrets
 
-from ..models import AnalyseResult
-
+from web.models import AnalyseResult
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 CLIENT_SECRET_FILE = os.path.join(PROJECT_DIR, '..', 'client_secret.json')

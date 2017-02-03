@@ -1,2 +1,6 @@
+pymongo
+oauth2client
+matplotlib
+numpy
 Flask==0.11.1
 Logbook==1.0.0

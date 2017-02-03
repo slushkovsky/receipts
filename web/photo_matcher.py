@@ -1,12 +1,11 @@
-import os
 import json
+import os
 from collections import namedtuple
 
 import cv2
 import numpy as np
 
 from . import config
-
 
 Size = namedtuple('Size', ['width', 'height'])
 

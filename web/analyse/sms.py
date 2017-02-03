@@ -2,7 +2,7 @@ import re
 
 from logbook import Logger, FileHandler
 
-from ..models import SMS, AnalyseResult
+from web.models import SMS, AnalyseResult
 
 
 log = Logger('ANALYSE_SMS')
